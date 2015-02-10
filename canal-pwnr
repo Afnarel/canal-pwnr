@@ -58,6 +58,7 @@ if __name__ == '__main__':
     parser.add_argument('chaine', choices=['lpj', 'guignols'], help='Canal to play')
     parser.add_argument('-p', '--player', help='Player to use',
                         default='mplayer')
+    parser.add_argument('--download', action='store_true')
     args = parser.parse_args()
 
     url = channels[args.chaine]
@@ -78,4 +79,7 @@ if __name__ == '__main__':
     hls_url = get_links(vid_id)['HLS']
     if args.resolution == 'high':
         hls_url = hls_url.replace('master', 'index_3_av')
-    call([args.player, hls_url])
+    if args.download:
+        call(["ffmpeg", "-i", hls_url, 'vid.ts'])
+    else:
+        call([args.player, hls_url])
